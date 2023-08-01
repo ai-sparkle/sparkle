@@ -32,6 +32,7 @@ def sanitize_data():
     return json.dumps({
         'sanitized_text': sanitized_text,
         'spans': [span.__dict__ for span in spans],
+        'mapping': [], #TODO: source_entity, mapped_entity
         'template': template
     }), 200
 
