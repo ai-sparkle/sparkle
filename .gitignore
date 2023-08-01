@@ -1,6 +1,8 @@
 env/
-**__pycache_**
+**__pycache__**
+__pycache__/
 build/**
 *.so
 *.o
 .DS_Store
+backend/.idea/

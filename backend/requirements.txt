@@ -3,3 +3,4 @@ flask_cors
 presidio_analyzer
 presidio-anonymizer
 presidio_evaluator
+PyPDF2
