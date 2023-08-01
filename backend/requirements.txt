@@ -3,3 +3,7 @@ flask_cors
 presidio_analyzer
 presidio-anonymizer
 presidio_evaluator
+jupyter
+jupyter-http-over-ws
+jupyter-nbextensions_configurator
+jupyter_contrib_nbextensions
