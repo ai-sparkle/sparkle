@@ -1,0 +1,5 @@
+Flask==2.2.2
+flask_cors
+presidio_analyzer
+presidio-anonymizer
+presidio_evaluator
