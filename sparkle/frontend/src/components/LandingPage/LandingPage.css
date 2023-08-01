@@ -1,0 +1,15 @@
+.Landing-page {
+    width: 100vw;
+    height: 100vh;
+    min-height: 100vh;
+}
+
+.Download-modal {
+    width: 30%;
+    min-width: 500px;
+    height: 40vh;
+    min-height: 336px;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin: 20px 0;
+}

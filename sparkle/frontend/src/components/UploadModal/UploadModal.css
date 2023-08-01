@@ -1,0 +1,8 @@
+.Upload-modal-container {
+    width: 30%;
+    min-width: 500px;
+    min-height: 600px;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin: 20px 0;
+}
