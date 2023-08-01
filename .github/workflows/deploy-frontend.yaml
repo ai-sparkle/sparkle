@@ -1,0 +1,69 @@
+name: Deploy Frontend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - frontend/**
+      - .github/**
+env:
+  PROJECT_ID: flow-development-343615
+  WEB_DASHBOARD_CONTAINER: sparkle-frontend
+  REGISTRY: us-docker.pkg.dev
+
+jobs:
+  deploy:
+    name: Upload to GCP
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    environment: production
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        id: "auth"
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: "access_token"
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
+      - name: Setup Google Cloud SDK
+        uses: google-github-actions/setup-gcloud@v1
+
+      - name: Set version from GITHUB_RUN_NUMBER
+        run: |
+          echo "VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker $REGISTRY
+
+      - name: Pack Build
+        id: pack-build
+        run: |
+          sudo add-apt-repository ppa:cncf-buildpacks/pack-cli
+          sudo apt-get install pack-cli
+          pack build $WEB_DASHBOARD_CONTAINER --path frontend --env BP_NODE_VERSION=16.19.1 --builder gcr.io/buildpacks/builder:v1
+
+      - name: Build, tag, and push image to GCP AR
+        id: build-image
+        env:
+          CONTAINER_TAG: latest
+          CONTAINER_NAME: ${{ env.WEB_DASHBOARD_CONTAINER }}
+        run: |
+          docker tag $CONTAINER_NAME $REGISTRY/$PROJECT_ID/$CONTAINER_NAME/$CONTAINER_NAME:$CONTAINER_TAG
+          docker push $REGISTRY/$PROJECT_ID/$CONTAINER_NAME/$CONTAINER_NAME:$CONTAINER_TAG
+          echo "image=$REGISTRY/$PROJECT_ID/$CONTAINER_NAME/$CONTAINER_NAME:$CONTAINER_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Cloud Run
+        uses: "google-github-actions/deploy-cloudrun@v1"
+        with:
+          service: "sparkle-frontend"
+          image: ${{ steps.build-image.outputs.image }}
+          env_vars: |
+            NODE_ENV=production
+            VERSION=${{ env.VERSION }}

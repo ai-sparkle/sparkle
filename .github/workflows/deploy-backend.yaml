@@ -1,0 +1,60 @@
+name: Deploy Backend to Cloud Run
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - backend/**
+      - .github/**
+env:
+  PROJECT_ID: flow-development-343615
+  FLASK_BACKEND_CONTAINER: sparkle-backend
+  REGISTRY: us-docker.pkg.dev
+
+jobs:
+  deploy:
+    name: Upload Flask Backend to GCP
+    runs-on: ubuntu-latest
+    permissions:
+      contents: "read"
+      id-token: "write"
+    environment: production
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Authenticate to Google Cloud
+        id: "auth"
+        uses: google-github-actions/auth@v1
+        with:
+          token_format: "access_token"
+          credentials_json: "${{ secrets.GOOGLE_CREDENTIALS }}"
+
+      - name: Set version from GITHUB_RUN_NUMBER
+        run: |
+          echo "VERSION=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+
+      - name: Configure Docker
+        run: |
+          gcloud auth configure-docker $REGISTRY
+
+      - name: Build, tag, and push image to GCP AR
+        id: build-image
+        env:
+          CONTAINER_TAG: latest
+          CONTAINER_NAME: ${{ env.FLASK_BACKEND_CONTAINER }}
+        run: |
+          docker build -t $CONTAINER_NAME .
+          docker tag $CONTAINER_NAME $REGISTRY/$PROJECT_ID/$CONTAINER_NAME/$CONTAINER_NAME:$CONTAINER_TAG
+          docker push $REGISTRY/$PROJECT_ID/$CONTAINER_NAME/$CONTAINER_NAME:$CONTAINER_TAG
+          echo "image=$REGISTRY/$PROJECT_ID/$CONTAINER_NAME/$CONTAINER_NAME:$CONTAINER_TAG" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Cloud Run
+        uses: "google-github-actions/deploy-cloudrun@v1"
+        with:
+          service: "sparkle-backend"
+          image: ${{ steps.build-image.outputs.image }}
+          env_vars: VERSION=${{ env.VERSION }}
+          port: 5000
