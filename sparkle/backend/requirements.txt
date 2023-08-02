@@ -4,3 +4,7 @@ presidio_analyzer
 presidio-anonymizer
 presidio_evaluator
 PyPDF2
+jupyter
+jupyter-http-over-ws
+jupyter-nbextensions_configurator
+jupyter_contrib_nbextensions
