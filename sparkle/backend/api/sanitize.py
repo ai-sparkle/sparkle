@@ -24,5 +24,14 @@ def sanitize_data():
             return json.dumps({'error': f'Invalid file: {file.filename}'})
         text = get_text_from_file(file)
 
-    sanitized_text = anonymize_text(text)
-    return json.dumps({'sanitized_text': str(sanitized_text)}), 200
+    sanitized_obj = anonymize_text(text)
+    sanitized_text = sanitized_obj.fake
+    spans = sanitized_obj.spans
+    template = sanitized_obj.template
+
+    return json.dumps({
+        'sanitized_text': sanitized_text,
+        'spans': [span.__dict__ for span in spans],
+        'template': template
+    }), 200
+
