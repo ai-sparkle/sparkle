@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - backend/**
+      - sparkle/backend/**
       - .github/**
 env:
   PROJECT_ID: flow-development-343615

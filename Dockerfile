@@ -1,32 +1,31 @@
-# Use an official Python runtime as a parent image
-FROM python:3.9-slim
+# Use the official Conda Python image
+FROM continuumio/miniconda3
 
-# Environment variables
-ENV PYTHONUNBUFFERED True
-
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends gcc g++ python3-dev
+# Install build-essential libraries
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libgomp1
 
-# Copy the requirements file into the image
-COPY backend/requirements.txt .
+# Copy the entire application into the image
+COPY . .
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Create the environment using the environment.yml file in the application
+RUN conda env create -f /app/sparkle/backend/environment.yml --prefix /app/env
 
-# Remove system dependencies
-RUN apt-get purge -y --auto-remove gcc g++ python3-dev
+# Set environment variables
+ENV PATH=/app/env/bin:$PATH \
+    CONDA_DEFAULT_ENV=/app/env \
+    CONDA_PREFIX=/app/env \
+    PYTHONPATH=/app:$PYTHONPATH
 
-# Download SpaCy model
-RUN python -m spacy download en_core_web_lg
-
-# Copy the application into the image
-COPY backend/ .
+# Download spacy model
+RUN /app/env/bin/python -m spacy download en_core_web_lg
 
 # Expose port
 EXPOSE 5000
 
 # Run the application
-CMD ["python", "app.py"]
+CMD ["python", "sparkle/backend/app.py"]

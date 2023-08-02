@@ -3,7 +3,7 @@ import json
 from flask import Blueprint
 from flask import request
 
-from sparkle.backend.util.sanitize_util import anonymize_text
+from util.sanitize_util import anonymize_text
 
 from sparkle.backend.util.file_util import is_valid_file, get_text_from_file
 
