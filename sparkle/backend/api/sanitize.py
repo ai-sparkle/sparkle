@@ -16,6 +16,9 @@ def sanitize_data():
     text = request.form.get('text')
     file = request.files.get('file')
 
+    allow_list = json.loads(request.form.get('allowList')) if request.form.get('allowList') else None
+    deny_list = json.loads(request.form.get('denyList')) if request.form.get('denyList') else None
+
     if not text and not file:
         return json.dumps({'error': 'Must provide text or a file'}), 404
 
@@ -24,13 +27,14 @@ def sanitize_data():
             return json.dumps({'error': f'Invalid file: {file.filename}'})
         text = get_text_from_file(file)
 
-    sanitized_obj = anonymize_text(text)
+    sanitized_obj = anonymize_text(text, allow_list, deny_list)
     sanitized_text = sanitized_obj.fake
     spans = sanitized_obj.spans
     template = sanitized_obj.template
 
     return json.dumps({
         'sanitized_text': sanitized_text,
+        'original_text': text,
         'spans': [span.__dict__ for span in spans],
         'mapping': [], #TODO: source_entity, mapped_entity
         'template': template
