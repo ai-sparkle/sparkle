@@ -4,7 +4,7 @@
 ## What is Sparkle?
 Sparkle is an open source project that helps enterprises use AI and large language models enabling them to sanitize their data before sending it to an LLM like OpenAI.
 
-Sparkle was created by [Storytell](http://Storytell.ai) to give enterprises a way to use Storytell and other AI tools without sending sensitive company data outside their company environment.
+Sparkle was created by [Storytell](http://Storytell.ai) to give enterprises a way to use Storytell and other AI tools without sending sensitive company data outside their company environment. [Learn more about how Sparkle works with Storytell.](https://www.web.storytell.ai/support/sparkle-ai/why-storytell-created-sparkle-ai-as-an-oss-project-to-sanitize-enterprise-data-for-ai-use-cases)
 
 ## How does Sparkle work?
 Sparkle replaces PII and other sensitive data with synthetic data. It is powered by [Microsoft's Presidio Data Protection and De-identification SDK](https://github.com/microsoft/presidio).
