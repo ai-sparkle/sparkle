@@ -7,13 +7,13 @@ import { FileObject } from '../LandingPage/LandingPage'
 interface UploadModalProps {
     files: FileObject[]
     setFiles: React.Dispatch<React.SetStateAction<FileObject[]>>
-    sanitizeFiles: () => void
+    setStep: React.Dispatch<React.SetStateAction<number>>
 }
 
 export default function UploadModal({
     files,
     setFiles,
-    sanitizeFiles,
+    setStep,
 }: UploadModalProps) {
     const [text, setText] = useState('')
 
@@ -207,7 +207,7 @@ export default function UploadModal({
                         cursor: 'pointer',
                         margin: '10px 0',
                     }}
-                    onClick={sanitizeFiles}
+                    onClick={() => setStep(1)}
                 >
                     Clean your files!
                 </button>

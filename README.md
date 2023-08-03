@@ -1,5 +1,6 @@
 # Sparkle
-![Sparkle](https://p144.p3.n0.cdn.getcloudapp.com/items/L1uvbwQ5/a4a704c5-aee5-49a6-a2ac-e587c643aba3.png?v=a588b1e0d4ad0872085970afdf13a268)
+
+![Sparkle](https://p144.p3.n0.cdn.getcloudapp.com/items/L1uvbwQ5/a4a704c5-aee5-49a6-a2ac-e587c643aba3.png?v=a588b1e0d4ad0872085970afdf13a268)\
 
 ## What is Sparkle?
 Sparkle is an open source project that helps enterprises use AI and large language models enabling them to sanitize their data before sending it to an LLM like OpenAI.

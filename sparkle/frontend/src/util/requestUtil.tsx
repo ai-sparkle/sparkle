@@ -1,8 +1,16 @@
-export async function sanitizeData(text: string | null, file: File | null) {
+export async function sanitizeData(
+    text: string | null,
+    file: File | null,
+    allowList?: string[],
+    denyList?: string[]
+) {
     const formData = new FormData()
 
     text && formData.append('text', text)
     file && formData.append('file', file)
+
+    allowList && formData.append('allowList', JSON.stringify(allowList))
+    denyList && formData.append('denyList', JSON.stringify(denyList))
 
     try {
         const requestHost = process.env.REACT_APP_HOST_SERVER

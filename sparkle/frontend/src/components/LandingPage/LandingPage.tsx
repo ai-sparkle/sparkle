@@ -9,6 +9,7 @@ import './LandingPage.css'
 import FileCheckmark from '../icons/FileCheckmark'
 import Key from '../icons/Key'
 import Download from '../icons/Download'
+import Close from '../icons/Close'
 
 export interface FileObject {
     id: number
@@ -37,6 +38,10 @@ export default function LandingPage() {
     const [zipFile, setZipFile] = useState<JSZip | null>(null)
     const [step, setStep] = useState(0)
     const [files, setFiles] = useState<FileObject[]>([])
+    const [denyList, setDenyList] = useState<string[]>([])
+    const [allowList, setAllowList] = useState<string[]>([])
+    const [currentAllowInput, setCurrentAllowInput] = useState('')
+    const [currentDenyInput, setCurrentDenyInput] = useState('')
     const [mappingsFound, setMappingsFound] = useState<MappingsObject>({
         name: 0,
         phone_number: 0,
@@ -50,10 +55,12 @@ export default function LandingPage() {
         setCurrentKey(keys[nextIndex])
     }
 
+    console.log(allowList, denyList)
+
     useEffect(() => {
         let intervalId: NodeJS.Timeout | null = null
 
-        if (step === 1) {
+        if (step === 2) {
             intervalId = setInterval(() => {
                 cycleKeys()
             }, 500)
@@ -70,19 +77,32 @@ export default function LandingPage() {
 
     const sanitizeFiles = async () => {
         if (files && files.length) {
-            setStep(1)
+            setStep(2)
             const zip = new JSZip()
             let newMappingsFound: MappingsObject = { ...mappingsFound }
             try {
                 for (let i = 0; i < files.length; i++) {
-                    const res = await sanitizeData(files[i].text, files[i].file)
+                    const res = await sanitizeData(
+                        files[i].text,
+                        files[i].file,
+                        allowList,
+                        denyList
+                    )
 
-                    const fileName = files[i].file?.name + '_sanitized.txt'
+                    const fileName =
+                        (files[i].file?.name || `text_upload_${i}`) +
+                        '_sanitized.txt'
                     const dictionaryFileName =
-                        files[i].file?.name + '_sanitized_dictionary.txt'
-                    const spanText = res.spans
-                        .map((span: any) => JSON.stringify(span, null, 2))
-                        .join('\n')
+                        (files[i].file?.name || `text_upload_${i}`) +
+                        '_sanitized_dictionary.txt'
+
+                    const spanText =
+                        '[' +
+                        res.spans
+                            .map((span: any) => JSON.stringify(span, null, 2))
+                            .join(',\n') +
+                        ']'
+
                     const sanitizedText = res.sanitized_text
 
                     res.spans.forEach((span: any) => {
@@ -98,7 +118,7 @@ export default function LandingPage() {
                     setProcessedFiles(i + 1)
                 }
                 setMappingsFound(newMappingsFound)
-                setStep(2)
+                setStep(3)
             } catch (error) {
                 console.error('Failed to sanitize files:', error)
             }
@@ -112,6 +132,23 @@ export default function LandingPage() {
             saveAs(blob, 'sanitized_files.zip')
         } else {
             console.error('No files to download')
+        }
+    }
+
+    const handleKeyPressAllow = (event: any) => {
+        if (event.key === 'Enter') {
+            setAllowList((prevAllowList) => [
+                ...prevAllowList,
+                currentAllowInput,
+            ])
+            setCurrentAllowInput('')
+        }
+    }
+
+    const handleKeyPressDeny = (event: any) => {
+        if (event.key === 'Enter') {
+            setDenyList((prevDenyList) => [...prevDenyList, currentDenyInput])
+            setCurrentDenyInput('')
         }
     }
 
@@ -133,11 +170,254 @@ export default function LandingPage() {
                     <UploadModal
                         files={files}
                         setFiles={setFiles}
-                        sanitizeFiles={sanitizeFiles}
+                        setStep={setStep}
                     />
                 </div>
             )}
             {step === 1 && (
+                <div
+                    className="flex flex-col items-center"
+                    style={{ width: '100%', marginBottom: '30px' }}
+                >
+                    <div
+                        style={{
+                            width: '350px',
+                            textAlign: 'center',
+                            fontSize: 'smaller',
+                            marginBottom: '10px',
+                        }}
+                    >
+                        {`Create your Whitelist and Blacklist. For convenience,
+                        these lists are saved in your browser’s memory.`}
+                    </div>
+                    <div
+                        className="flex flex-col items-center"
+                        style={{
+                            width: '25%',
+                            height: '270px',
+                            border: '1px solid black',
+                            borderRadius: '4px',
+                            margin: '10px 0',
+                            minWidth: '500px',
+                            minHeight: '400px',
+                        }}
+                    >
+                        <div
+                            className="flex flex-col"
+                            style={{ width: '90%', height: '90%' }}
+                        >
+                            <div
+                                className="flex flex-col"
+                                style={{
+                                    flexGrow: 1,
+                                    paddingTop: '15px',
+                                    overflowY: 'auto',
+                                    height: '50%',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        fontSize: 'smaller',
+                                        marginBottom: '5px',
+                                    }}
+                                >
+                                    {' '}
+                                    {'Whitelist: never sanitize'}{' '}
+                                </div>
+                                <div
+                                    style={{
+                                        color: '#9EA3AF',
+                                        fontSize: 'small',
+                                    }}
+                                >
+                                    {' '}
+                                    {'Never clean the words in this list'}{' '}
+                                </div>
+                                <div>
+                                    <input
+                                        type="text"
+                                        value={currentAllowInput}
+                                        onChange={(e) =>
+                                            setCurrentAllowInput(e.target.value)
+                                        }
+                                        onKeyPress={handleKeyPressAllow}
+                                        placeholder="Enter a term and press enter"
+                                        style={{
+                                            width: '100%',
+                                            height: '45px',
+                                            border: '1px solid #B6B6B6',
+                                            borderRadius: '4px',
+                                            color: '#6F6F6F',
+                                            padding: '0 10px',
+                                            outline: 'none',
+                                            margin: '10px 0',
+                                        }}
+                                    />
+                                </div>
+                                {allowList && allowList.length > 0 && (
+                                    <div
+                                        className="flex flex-row"
+                                        style={{
+                                            width: '100%',
+                                            height: '50px',
+                                            overflowY: 'scroll',
+                                            maxHeight: '150px',
+                                        }}
+                                    >
+                                        {allowList.map((item, index) => {
+                                            return (
+                                                <div className="flex flex-row items-center Word-bubble">
+                                                    <div>{item}</div>
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5px',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        onClick={() => {
+                                                            setAllowList(
+                                                                (
+                                                                    prevAllowList
+                                                                ) =>
+                                                                    prevAllowList.filter(
+                                                                        (
+                                                                            _,
+                                                                            i
+                                                                        ) =>
+                                                                            i !==
+                                                                            index
+                                                                    )
+                                                            )
+                                                        }}
+                                                    >
+                                                        <Close
+                                                            scale={0.9}
+                                                            color="#367DE7"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                            <div
+                                style={{ borderBottom: '1px solid #B6B6B6' }}
+                            ></div>
+                            <div
+                                className="flex flex-col"
+                                style={{
+                                    flexGrow: 1,
+                                    paddingTop: '15px',
+                                    overflowY: 'auto',
+                                    height: '50%',
+                                }}
+                            >
+                                <div
+                                    style={{
+                                        fontSize: 'smaller',
+                                        marginBottom: '5px',
+                                    }}
+                                >
+                                    {' '}
+                                    {'Blacklist: always sanitize'}{' '}
+                                </div>
+                                <div
+                                    style={{
+                                        color: '#9EA3AF',
+                                        fontSize: 'small',
+                                    }}
+                                >
+                                    {' '}
+                                    {'Always clean the words in this list'}{' '}
+                                </div>
+                                <div>
+                                    <input
+                                        type="text"
+                                        value={currentDenyInput}
+                                        onChange={(e) =>
+                                            setCurrentDenyInput(e.target.value)
+                                        }
+                                        onKeyPress={handleKeyPressDeny}
+                                        placeholder="Enter a term and press enter"
+                                        style={{
+                                            width: '100%',
+                                            height: '45px',
+                                            border: '1px solid #B6B6B6',
+                                            borderRadius: '4px',
+                                            color: '#6F6F6F',
+                                            padding: '0 10px',
+                                            outline: 'none',
+                                            margin: '10px 0',
+                                        }}
+                                    />
+                                </div>
+                                {denyList && denyList.length > 0 && (
+                                    <div
+                                        className="flex flex-row"
+                                        style={{
+                                            width: '100%',
+                                            height: '50px', // Set a fixed height
+                                            overflowY: 'scroll', // Allow vertical scrolling
+                                            maxHeight: '150px', // Ensures the container doesn't grow
+                                        }}
+                                    >
+                                        {denyList.map((item, index) => {
+                                            return (
+                                                <div className="flex flex-row items-center Word-bubble">
+                                                    <div>{item}</div>
+                                                    <div
+                                                        style={{
+                                                            marginLeft: '5px',
+                                                            cursor: 'pointer',
+                                                        }}
+                                                        onClick={() => {
+                                                            setDenyList(
+                                                                (
+                                                                    prevDenyList
+                                                                ) =>
+                                                                    prevDenyList.filter(
+                                                                        (
+                                                                            _,
+                                                                            i
+                                                                        ) =>
+                                                                            i !==
+                                                                            index
+                                                                    )
+                                                            )
+                                                        }}
+                                                    >
+                                                        <Close
+                                                            scale={0.9}
+                                                            color="#367DE7"
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                        <div
+                            className="flex content-center items-center"
+                            style={{
+                                color: 'white',
+                                backgroundColor: '#367DE7',
+                                width: '45%',
+                                fontSize: 'smaller',
+                                borderRadius: '4px',
+                                height: '40px',
+                                marginBottom: '20px',
+                                cursor: 'pointer',
+                            }}
+                            onClick={sanitizeFiles}
+                        >
+                            Sanitize files
+                        </div>
+                    </div>
+                </div>
+            )}
+            {step === 2 && (
                 <>
                     <div
                         style={{
@@ -194,7 +474,7 @@ export default function LandingPage() {
                 </>
             )}
 
-            {step === 2 && (
+            {step === 3 && (
                 <div>
                     <div
                         className="flex content-center items-center"
