@@ -5,15 +5,13 @@ export async function sanitizeData(text: string | null, file: File | null) {
     file && formData.append('file', file)
 
     try {
-        const response = await fetch(
-            process.env.REACT_APP_HOST_SERVER
-                ? process.env.REACT_APP_HOST_SERVER
-                : 'https://api.sparkle.ai' + '/sanitize/',
-            {
-                method: 'POST',
-                body: formData,
-            }
-        )
+        const requestHost = process.env.REACT_APP_HOST_SERVER
+            ? process.env.REACT_APP_HOST_SERVER
+            : 'https://api.sparkle.ai'
+        const response = await fetch(requestHost + '/sanitize/', {
+            method: 'POST',
+            body: formData,
+        })
 
         if (response.ok) {
             const jsonData = await response.json()
