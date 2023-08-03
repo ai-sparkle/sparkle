@@ -1,0 +1,52 @@
+.ProcessingLoadingText {
+    width: 200px;
+}
+
+.ProcessingLoadingText-word {
+    position: absolute;
+    width: 200px;
+    text-align: left;
+    font-weight: 600;
+}
+
+.ProcessingLoadingText-current {
+    animation: 2000ms words-current ease-in-out infinite;
+}
+
+.ProcessingLoadingText-next {
+    animation: 2000ms words-next ease-in-out infinite;
+}
+
+@keyframes words-current {
+    0% {
+        opacity: 100%;
+        top: 0px;
+    }
+
+    20% {
+        opacity: 0%;
+        top: -20px;
+    }
+
+    100% {
+        opacity: 0%;
+        top: -20px;
+    }
+}
+
+@keyframes words-next {
+    0% {
+        opacity: 0%;
+        top: 20px;
+    }
+
+    20% {
+        opacity: 100%;
+        top: 0px;
+    }
+
+    100% {
+        opacity: 100%;
+        top: 0px;
+    }
+}

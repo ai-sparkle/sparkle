@@ -81,23 +81,25 @@ export default function UploadModal({
                 style={{
                     border: '1px solid #B6B6B6',
                     borderRadius: '4px',
-                    width: '85%',
+                    width: '100%',
                     height: '150px',
-                    margin: '20px',
                     cursor: 'pointer',
                 }}
                 onClick={handleUploadClick}
             >
                 <div className="flex flex-col items-center content-center">
                     <Upload scale={1.5} color="#367DE7" />
-                    <div style={{ margin: '10px 0' }}>Add your files</div>
+                    <div style={{ margin: '10px 0' }}>Add your files </div>
                     <div style={{ fontSize: 'small' }}>.pdf, .txt</div>
+                    <div style={{ fontSize: 'x-small', marginTop: '8px' }}>
+                        (maximum 32MB)
+                    </div>
                 </div>
             </div>
 
             <div
                 className="flex flex-row items-center"
-                style={{ width: '85%' }}
+                style={{ width: '100%' }}
             >
                 <div
                     style={{
@@ -120,9 +122,9 @@ export default function UploadModal({
                 className="flex flex-col content-center items-center"
                 style={{
                     borderRadius: '4px',
-                    width: '85%',
-                    height: '150px',
-                    margin: '20px',
+                    width: '100%',
+                    height: '120px',
+                    // margin: '20px',
                 }}
             >
                 <div
@@ -177,7 +179,7 @@ export default function UploadModal({
                     className="flex flex-col"
                     style={{
                         width: '85%',
-                        height: '215px',
+                        maxHeight: '215px',
                         marginBottom: '20px',
                         overflowY: 'auto',
                     }}

@@ -10,6 +10,7 @@ import FileCheckmark from '../icons/FileCheckmark'
 import Key from '../icons/Key'
 import Download from '../icons/Download'
 import Close from '../icons/Close'
+import ProcessingLoadingText from '../ProcessingLoadingText/ProcessingLoadingText'
 
 export interface FileObject {
     id: number
@@ -157,7 +158,7 @@ export default function LandingPage() {
             <NavHeader />
             {step === 0 && (
                 <div>
-                    <div
+                    {/* <div
                         className="flex content-center items-center"
                         style={{
                             fontSize: 'xx-large',
@@ -166,7 +167,7 @@ export default function LandingPage() {
                         }}
                     >
                         Make your data shine!
-                    </div>
+                    </div> */}
                     <UploadModal
                         files={files}
                         setFiles={setFiles}
@@ -422,7 +423,7 @@ export default function LandingPage() {
                     <div
                         style={{
                             width: '60%',
-                            height: '5%',
+                            height: '45px',
                             backgroundColor: 'white',
                             borderRadius: '5px',
                             marginBottom: '30px',
@@ -436,6 +437,7 @@ export default function LandingPage() {
                                 width: `${
                                     (processedFiles / files.length) * 100
                                 }%`,
+                                minWidth: '40px',
                                 backgroundImage:
                                     'linear-gradient(90deg, #4FF4FF 0%, #4EFF4A 100%)',
                                 borderRadius: '5px',
@@ -450,26 +452,7 @@ export default function LandingPage() {
                             marginBottom: '30px',
                         }}
                     >
-                        <div
-                            style={{ marginRight: '5px' }}
-                        >{`Looking for`}</div>
-                        <div className="flex flex-col">
-                            <div>{keyToName[currentKey]}</div>
-                            {Object.keys(keyToName)
-                                .filter((key) => key !== currentKey)
-                                .map((key) => (
-                                    <div
-                                        style={{ marginTop: '10px' }}
-                                        key={key}
-                                    >
-                                        {
-                                            keyToName[
-                                                key as keyof typeof keyToName
-                                            ]
-                                        }
-                                    </div>
-                                ))}
-                        </div>
+                        <ProcessingLoadingText />
                     </div>
                 </>
             )}
@@ -580,14 +563,87 @@ export default function LandingPage() {
                 </div>
             )}
 
+            {step === 0 ? (
+                <div className="LandingPage-blogs-section flex flex-col items-center">
+                    <div className="LandingPage-blogs flex flex-row">
+                        <a
+                            className="BlogCard"
+                            href="https://www.web.storytell.ai/support/sparkle-ai/how-to-use-sparkle-ai"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <div className="BlogCard-header">
+                                <img
+                                    width="100%"
+                                    src="https://p36.tr2.n0.cdn.getcloudapp.com/items/z8ubog2B/3c9af249-d8c2-49a3-83af-b4530b1eb51c.jpg?v=71aab16a6021cd56eb748afed8d98a2c"
+                                    alt=""
+                                />
+                            </div>
+                            <div className="BlogCard-content">
+                                <span>How to use Sparkle.ai</span>
+                            </div>
+                        </a>
+                        <a
+                            className="BlogCard"
+                            href="https://www.web.storytell.ai/support/sparkle-ai/why-would-you-want-to-use-sparkle-ai"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <div className="BlogCard-header">
+                                <img
+                                    width="100%"
+                                    alt=""
+                                    src="https://p36.tr2.n0.cdn.getcloudapp.com/items/lluXWlqd/c8a411b4-94ff-43b5-840c-3f87e2334f81.webp?v=23ed948ca45900d56264e7f079dae6b2"
+                                />
+                            </div>
+                            <div className="BlogCard-content">
+                                <span>
+                                    Why would you want to use Sparkle.ai?
+                                </span>
+                            </div>
+                        </a>
+                        <a
+                            className="BlogCard"
+                            href="https://www.web.storytell.ai/support/sparkle-ai/why-storytell-created-sparkle-ai-as-an-oss-project-to-sanitize-enterprise-data-for-ai-use-cases"
+                            target="_blank"
+                            rel="noreferrer"
+                        >
+                            <div className="BlogCard-header">
+                                <iframe
+                                    width="100%"
+                                    height="100%"
+                                    src="https://www.youtube.com/embed/vCfwwmr8hUQ"
+                                    title="Introducing Sparkle.ai - an open source data sanitization service for AI use cases"
+                                    frameBorder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+                            <div className="BlogCard-content">
+                                <span>
+                                    Why Storytell created Sparkle.ai as an OSS
+                                    project to Sanitize Enterprise Data for AI
+                                    use cases
+                                </span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            ) : null}
+
             <div
                 className="flex flex-col items-center content-center"
-                style={{ margin: '10px 0' }}
+                style={{ margin: '20px 0' }}
             >
-                <img src={microsoft} alt="microsoft" />
-                <div style={{ fontSize: 'small', marginTop: '15px' }}>
-                    Made by Storytell.ai
-                </div>
+                {/* <img src={microsoft} alt="microsoft" /> */}
+                <a
+                    style={{ fontSize: 'small', marginTop: '15px' }}
+                    href="https://storytell.ai"
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                    Made with ❤️ by Storytell.ai
+                </a>
             </div>
         </div>
     )
