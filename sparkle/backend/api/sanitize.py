@@ -16,8 +16,8 @@ def sanitize_data():
     text = request.form.get('text')
     file = request.files.get('file')
 
-    allow_list = json.loads(request.form.get('allowList')) if request.form.get('allowList') else None
-    deny_list = json.loads(request.form.get('denyList')) if request.form.get('denyList') else None
+    allow_list = json.loads(request.form.get('allowList')) if request.form.get('allowList') else []
+    deny_list = json.loads(request.form.get('denyList')) if request.form.get('denyList') else []
 
     if not text and not file:
         return json.dumps({'error': 'Must provide text or a file'}), 404
@@ -27,7 +27,9 @@ def sanitize_data():
             return json.dumps({'error': f'Invalid file: {file.filename}'})
         text = get_text_from_file(file)
 
-    sanitized_obj = anonymize_text(text, allow_list, deny_list)
+    sanitized_obj = anonymize_text(text_to_anonymize=text,
+                                   allow_list=allow_list,
+                                   deny_list=deny_list)
     sanitized_text = sanitized_obj.fake
     spans = sanitized_obj.spans
     template = sanitized_obj.template
