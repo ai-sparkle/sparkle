@@ -10,6 +10,7 @@ import FileCheckmark from '../icons/FileCheckmark'
 import Key from '../icons/Key'
 import Download from '../icons/Download'
 import Close from '../icons/Close'
+import ProcessingLoadingText from '../ProcessingLoadingText/ProcessingLoadingText'
 
 export interface FileObject {
     id: number
@@ -422,7 +423,7 @@ export default function LandingPage() {
                     <div
                         style={{
                             width: '60%',
-                            height: '5%',
+                            height: '45px',
                             backgroundColor: 'white',
                             borderRadius: '5px',
                             marginBottom: '30px',
@@ -436,6 +437,7 @@ export default function LandingPage() {
                                 width: `${
                                     (processedFiles / files.length) * 100
                                 }%`,
+                                minWidth: '40px',
                                 backgroundImage:
                                     'linear-gradient(90deg, #4FF4FF 0%, #4EFF4A 100%)',
                                 borderRadius: '5px',
@@ -450,26 +452,7 @@ export default function LandingPage() {
                             marginBottom: '30px',
                         }}
                     >
-                        <div
-                            style={{ marginRight: '5px' }}
-                        >{`Looking for`}</div>
-                        <div className="flex flex-col">
-                            <div>{keyToName[currentKey]}</div>
-                            {Object.keys(keyToName)
-                                .filter((key) => key !== currentKey)
-                                .map((key) => (
-                                    <div
-                                        style={{ marginTop: '10px' }}
-                                        key={key}
-                                    >
-                                        {
-                                            keyToName[
-                                                key as keyof typeof keyToName
-                                            ]
-                                        }
-                                    </div>
-                                ))}
-                        </div>
+                        <ProcessingLoadingText />
                     </div>
                 </>
             )}
@@ -589,6 +572,25 @@ export default function LandingPage() {
                     Made by Storytell.ai
                 </div>
             </div>
+
+            {step === 0 ? (
+                <div className="LandingPage-blogs-section flex flex-col items-center">
+                    <div className="LandingPage-blogs flex flex-row">
+                        <a className="BlogCard">
+                            <div className="BlogCard-header"></div>
+                            <div className="BlogCard-content"></div>
+                        </a>
+                        <a className="BlogCard">
+                            <div className="BlogCard-header"></div>
+                            <div className="BlogCard-content"></div>
+                        </a>
+                        <a className="BlogCard">
+                            <div className="BlogCard-header"></div>
+                            <div className="BlogCard-content"></div>
+                        </a>
+                    </div>
+                </div>
+            ) : null}
         </div>
     )
 }
