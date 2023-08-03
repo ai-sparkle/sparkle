@@ -1,7 +1,5 @@
 .Landing-page {
     width: 100vw;
-    /* height: 100vh; */
-    /* min-height: 100vh; */
 }
 
 .Download-modal {
@@ -11,7 +9,7 @@
     min-height: 336px;
     border: 1px solid black;
     border-radius: 4px;
-    margin: 20px 0;
+    margin: 10px 0;
 }
 
 .Word-bubble {
@@ -49,6 +47,7 @@
     height: 300px;
     border-radius: 4px;
     border: 1px solid #b6b6b6;
+    text-decoration: none;
 }
 
 .BlogCard-header {
@@ -57,4 +56,11 @@
     background-color: white;
     border-top-left-radius: 4px;
     border-top-right-radius: 4px;
+}
+
+.BlogCard-content {
+    font-size: large;
+    font-weight: 400;
+    padding: 14px;
+    color: black;
 }
