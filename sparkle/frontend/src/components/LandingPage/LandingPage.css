@@ -13,3 +13,16 @@
     border-radius: 4px;
     margin: 20px 0;
 }
+
+.Word-bubble {
+    margin-bottom: 10px;
+    margin-right: 10px;
+    font-size: small;
+    font-weight: 500;
+    padding: 1px 4px;
+    height: 27px;
+    min-width: fit-content;
+    background-color: #e1edff;
+    color: #367de7;
+    border-radius: 3px;
+}
