@@ -62,6 +62,15 @@ def anonymize_text(text_to_anonymize: str, entities: Optional[List[str]] = None,
                                         allow_list=allow_list,
                                         language=language,
                                         ad_hoc_recognizers=ad_hoc_recognizers)
+
+    original_spans = []
+    for result in analyzer_results:
+        original_spans.append({
+            'start': result.start,
+            'end': result.end,
+            'entity_type': ENTITY_MAP[result.entity_type]
+        })
+
     # pass Analyzer results into the anonymizer
     anonymizer = AnonymizerEngine()
     anonymized_results = anonymizer.anonymize(
@@ -81,4 +90,5 @@ def anonymize_text(text_to_anonymize: str, entities: Optional[List[str]] = None,
         templates=sentence_templates, n_samples=1)
     fake_records_list = list(fake_records)
     result = fake_records_list[0]
+    result.original_spans = original_spans
     return result
