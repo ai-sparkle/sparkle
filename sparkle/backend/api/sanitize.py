@@ -31,14 +31,18 @@ def sanitize_data():
                                    allow_list=allow_list,
                                    deny_list=deny_list)
     sanitized_text = sanitized_obj.fake
-    spans = sanitized_obj.spans
     template = sanitized_obj.template
+
+    original_spans = sorted(sanitized_obj.original_spans, key=lambda x: x['start'])
+    sanitized_spans = sorted(sanitized_obj.spans, key=lambda x: x.start)
+
+    for original_span, sanitized_span in zip(original_spans, sanitized_spans):
+        sanitized_span.original_value = text[original_span['start']:original_span['end']]
 
     return json.dumps({
         'sanitized_text': sanitized_text,
         'original_text': text,
-        'spans': [span.__dict__ for span in spans],
-        'mapping': [], #TODO: source_entity, mapped_entity
+        'spans': [span.__dict__ for span in sanitized_spans],
         'template': template
     }), 200
 
