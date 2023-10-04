@@ -188,7 +188,7 @@ export default function LandingPage() {
                             marginBottom: '10px',
                         }}
                     >
-                        {`Create your Whitelist and Blacklist. For convenience,
+                        {`Create your Allowlist and Denylist. For convenience,
                         these lists are saved in your browser’s memory.`}
                     </div>
                     <div
@@ -223,7 +223,7 @@ export default function LandingPage() {
                                     }}
                                 >
                                     {' '}
-                                    {'Whitelist: never sanitize'}{' '}
+                                    {'Allowlist: never sanitize'}{' '}
                                 </div>
                                 <div
                                     style={{
@@ -320,7 +320,7 @@ export default function LandingPage() {
                                     }}
                                 >
                                     {' '}
-                                    {'Blacklist: always sanitize'}{' '}
+                                    {'Denylist: always sanitize'}{' '}
                                 </div>
                                 <div
                                     style={{
