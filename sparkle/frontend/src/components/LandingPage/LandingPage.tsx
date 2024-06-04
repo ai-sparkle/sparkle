@@ -568,7 +568,7 @@ export default function LandingPage() {
                     <div className="LandingPage-blogs flex flex-row">
                         <a
                             className="BlogCard"
-                            href="https://www.web.storytell.ai/support/sparkle-ai/how-to-use-sparkle-ai"
+                            href="https://go.storytell.ai/sparkle-how-to"
                             target="_blank"
                             rel="noreferrer"
                         >
@@ -585,7 +585,7 @@ export default function LandingPage() {
                         </a>
                         <a
                             className="BlogCard"
-                            href="https://www.web.storytell.ai/support/sparkle-ai/why-would-you-want-to-use-sparkle-ai"
+                            href="https://go.storytell.ai/why-sparkle"
                             target="_blank"
                             rel="noreferrer"
                         >
@@ -604,7 +604,7 @@ export default function LandingPage() {
                         </a>
                         <a
                             className="BlogCard"
-                            href="https://www.web.storytell.ai/support/sparkle-ai/why-storytell-created-sparkle-ai-as-an-oss-project-to-sanitize-enterprise-data-for-ai-use-cases"
+                            href="https://go.storytell.ai/sparkle-origin-story"
                             target="_blank"
                             rel="noreferrer"
                         >
